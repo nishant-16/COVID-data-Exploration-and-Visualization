@@ -1,0 +1,53 @@
+/*
+QUERIES USED FOR TABLEAU PROJECT
+*/
+
+-- FIRST QUERY. 
+
+SELECT 
+    SUM(new_cases) AS total_cases, 
+    SUM(cast(new_deaths AS int)) AS total_deaths, 
+    SUM(cast(new_deaths AS int))/SUM(New_Cases)*100 AS DeathPercentage
+FROM CovidDeaths
+--Where location like '%states%'
+WHERE continent IS NOT NULL 
+--Group By date
+ORDER BY 1,2
+
+-- SECOND QUERY. 
+
+-- WE TAKE THESE OUT AS THEY ARE NOT INCLUDED IN THE ABOVE QUERIES ADN WANT TO STAY CONSISTENT
+-- EUROPEAN UNION IS A PART OF EUROPE
+
+SELECT 
+    location, 
+    SUM(cast(new_deaths AS int)) AS TotalDeathCount
+From CovidDeaths
+--Where location like '%states%'
+WHERE continent IS NULL 
+    AMD location NOT IN ('World', 'European Union', 'International')
+GROUP BY location
+ORDER BY TotalDeathCount DESC
+
+
+-- THIRD QUERY.
+
+SELECT 
+    location, 
+    Population, 
+    MAX(total_cases) AS HighestInfectionCount, 
+    Max((total_cases/population))*100 AS PercentPopulationInfected
+FROM CovidDeaths
+--Where location like '%states%'
+GROUP BY Location, Population
+ORDER BY PercentPopulationInfected DESC
+
+-- FOURTH QUERY.
+
+SELECT Location, 
+    Population,date, 
+    MAX(total_cases) AS HighestInfectionCount,  
+    Max((total_cases/population))*100 AS PercentPopulationInfected
+FROM PortfolioProject..CovidDeaths
+GROUP BY Location, Population, date
+ORDER BY PercentPopulationInfected DESC
